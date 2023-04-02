@@ -1,8 +1,7 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
-import styles from "../styles/Home.module.css";
-import Header from "../components/Header/Header";
-import FactCard from "../components/FactCard/FactCard";
+import Header from "../components/Header";
+import FactCard from "../components/FactCard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,9 +14,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main className="flex flex-col h-screen font-mono">
         <Header />
-        <div className={styles.content}>
+        <div className="flex-1 flex flex-col justify-center items-center p-2 sm:p-16">
           <FactCard />
         </div>
       </main>
