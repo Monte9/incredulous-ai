@@ -1,1 +1,1 @@
-export const FREE_FACTS_COUNT = 25;
+export const FREE_FACTS_COUNT = 5;
