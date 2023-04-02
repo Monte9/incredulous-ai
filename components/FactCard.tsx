@@ -7,11 +7,11 @@ import UpgradeModal from "./UpgradeModal";
 
 function FactCard() {
   const [emoji, setEmoji] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [fact, setFact] = useState("");
   const [showTutorialBanner, setShowTutorialBanner] = useState(false);
   const [streakCount, setStreakCount] = useState(0);
-  const [viewedFactsCount, setViewedFactsCount] = useState(0);
+  const [factsViewedCount, setFactsViewedCount] = useState(0);
   const [showUpgradeModal, setShowUpgradeModal] = React.useState(false);
 
   useEffect(() => {
@@ -22,12 +22,10 @@ function FactCard() {
       setShowTutorialBanner(true);
     }
 
-    const viewedFactsCount = parseInt(localStorage.getItem("viewedFactsCount"));
-    if (viewedFactsCount) {
-      const parsedViewedFactsCount = isNaN(viewedFactsCount)
-        ? 1
-        : viewedFactsCount;
-      setViewedFactsCount(parsedViewedFactsCount);
+    const factsCount = parseInt(localStorage.getItem("factsViewedCount"));
+    if (factsCount) {
+      const parsedFactsCount = isNaN(factsCount) ? 1 : factsCount;
+      setFactsViewedCount(parsedFactsCount);
     }
 
     fetchFact();
@@ -60,13 +58,24 @@ function FactCard() {
   };
 
   const handleEmojiClick = (e) => {
+    // Get the count for the facts viewed so far
+    const factsCount = parseInt(localStorage.getItem("factsViewedCount"));
+    const newFactsCount = isNaN(factsCount) ? 1 : factsViewedCount + 1;
+
     // If the user doesn't have any more free facts, then show them the upgrade modal
-    if (viewedFactsCount > FREE_FACTS_COUNT) {
+    if (newFactsCount > FREE_FACTS_COUNT) {
       setShowUpgradeModal(true);
       return;
     }
 
+    // Update the facts viewed count in local storage
+    localStorage.setItem("factsViewedCount", String(newFactsCount));
+    setFactsViewedCount(newFactsCount);
+
+    // Set the emoji for user feedback
     setEmoji(e.target.value);
+
+    // Fetch a new fact to show next
     fetchFact();
 
     const showBanner = localStorage.getItem("showTutorialBanner");
@@ -75,29 +84,23 @@ function FactCard() {
       setShowTutorialBanner(false);
     }
 
-    // Update the viewed facts count in local storage
-    const factsCount = parseInt(localStorage.getItem("viewedFactsCount"));
-    const newFactsCount = isNaN(factsCount) ? 1 : viewedFactsCount + 1;
-    localStorage.setItem("viewedFactsCount", String(newFactsCount));
-    setViewedFactsCount(newFactsCount);
-
     // Update the streak count
     setStreakCount(streakCount + 1);
   };
 
   return (
-    <div className="flex flex-col w-full sm:max-w-xl p-6 mx-auto">
+    <div className="flex flex-col w-full sm:max-w-xl px-5 mx-auto">
       {showUpgradeModal ? (
         <UpgradeModal dismissModal={() => setShowUpgradeModal(false)} />
       ) : null}
       <div className="flex flex-row mx-auto mb-2 w-full justify-between">
-        <div className="text-sm font-bold">Streak: {streakCount} 🔥</div>
-        <div className="text-sm font-bold">
-          Viewed Facts: {viewedFactsCount}/{FREE_FACTS_COUNT}
+        <div className="text-sm">Streak: {streakCount} 🔥</div>
+        <div className="text-sm">
+          Facts Viewed: {factsViewedCount}/{FREE_FACTS_COUNT}
         </div>
       </div>
       <div
-        className="flex flex-col sm:max-w-xl rounded-lg shadow-lg"
+        className="flex flex-col sm:max-w-xl rounded-lg shadow-lg my-2 sm:my-0"
         style={{
           minHeight: "350px",
           justifyContent: "center",
@@ -106,7 +109,9 @@ function FactCard() {
         {isLoading ? (
           <div className="flex justify-center items-center">
             {emoji ? (
-              <div>You found that {emoji}.</div>
+              <div className="text-md mb-4 text-center sm:text-left">
+                You found that {emoji}.
+              </div>
             ) : (
               <FaSpinner className="animate-spin h-6 w-6 text-gray-500" />
             )}
@@ -116,7 +121,7 @@ function FactCard() {
             <div className="mb-4 w-fit">
               <Badge />
             </div>
-            <div className="text-lg mb-4 text-center sm:text-left">{fact}</div>
+            <div className="text-md mb-4 text-center sm:text-left">{fact}</div>
             <div className="flex justify-between mb-4 px-4 sm:px-12">
               <button
                 className="emoji-button text-4xl rounded-md p-2 hover:bg-gray-500 transition duration-200 ease-in-out"

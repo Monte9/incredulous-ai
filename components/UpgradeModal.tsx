@@ -8,7 +8,7 @@ function UpgradeModal(props) {
       <div className="fixed inset-0 z-10 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen px-4">
           <div
-            className="bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full justify-center"
+            className="bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-xl sm:w-full justify-center"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-headline"
@@ -35,12 +35,7 @@ function UpgradeModal(props) {
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  <path strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
@@ -55,11 +50,11 @@ function UpgradeModal(props) {
               <p className="text-sm leading-5 mt-4">
                 Alternatively, come back tomorrow for more free facts.
               </p>
-              <div className="mt-6 flex flex-col justify-end h-full">
-                <button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-700 active:bg-blue-700 transition duration-150 ease-in-out mb-2">
+              <div className="mt-6 flex flex-col sm:flex-row justify-end sm:items-end sm:justify-between h-full">
+                <button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-700 active:bg-blue-700 transition duration-150 ease-in-out mb-2 h-auto sm:h-12">
                   Buy 50 facts for $0.99
                 </button>
-                <button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-700 active:bg-blue-700 transition duration-150 ease-in-out mb-2">
+                <button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-700 active:bg-blue-700 transition duration-150 ease-in-out mb-2 h-auto sm:h-12">
                   Buy 200 facts for $1.99
                 </button>
               </div>
