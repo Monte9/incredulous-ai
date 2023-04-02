@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { FaSpinner } from "react-icons/fa";
-import IntroBanner from "./IntroBanner";
+import TutorialBanner from "./TutorialBanner";
 import Badge from "./TopicBadge";
 
 function FactCard() {
   const [emoji, setEmoji] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [fact, setFact] = useState("");
+  const [showTutorialBanner, setShowTutorialBanner] = useState(false);
 
   useEffect(() => {
+    const showBanner = localStorage.getItem("showTutorialBanner");
+    if (showBanner === "false") {
+      setShowTutorialBanner(false);
+    } else {
+      setShowTutorialBanner(true);
+    }
+
     fetchFact();
   }, []);
 
@@ -41,6 +49,12 @@ function FactCard() {
   const handleEmojiClick = (e) => {
     setEmoji(e.target.value);
     fetchFact();
+
+    const showBanner = localStorage.getItem("showTutorialBanner");
+    if (!showBanner) {
+      localStorage.setItem("showTutorialBanner", "false");
+      setShowTutorialBanner(false);
+    }
   };
 
   return (
@@ -95,7 +109,7 @@ function FactCard() {
           </div>
         </>
       )}
-      {!isLoading && <IntroBanner />}
+      {!isLoading && showTutorialBanner && <TutorialBanner />}
     </div>
   );
 }
