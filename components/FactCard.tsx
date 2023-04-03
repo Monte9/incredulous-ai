@@ -126,7 +126,11 @@ function FactCard() {
   return (
     <div className="flex flex-col w-full sm:max-w-xl px-5 mx-auto">
       {showUpgradeModal ? (
-        <UpgradeModal dismissModal={() => setShowUpgradeModal(false)} />
+        <UpgradeModal
+          dismissModal={() => setShowUpgradeModal(false)}
+          streakCount={streakCount}
+          factsViewedCount={factsViewedCount}
+        />
       ) : null}
       <div className="flex flex-row mx-auto mb-2 w-full justify-between">
         <div className="text-sm">Streak: {streakCount} 🔥</div>
