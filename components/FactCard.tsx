@@ -4,15 +4,23 @@ import TutorialBanner from "./TutorialBanner";
 import Badge from "./TopicBadge";
 import { FREE_FACTS_COUNT } from "../shared/Constants";
 import UpgradeModal from "./UpgradeModal";
+import useAnalytics from "../shared/Analytics";
+
+type Fact = {
+  statement: string;
+  topics: string[];
+  category: string;
+};
 
 function FactCard() {
   const [emoji, setEmoji] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [fact, setFact] = useState("");
+  const [fact, setFact] = useState<Fact | null>(null);
   const [showTutorialBanner, setShowTutorialBanner] = useState(false);
   const [streakCount, setStreakCount] = useState(0);
   const [factsViewedCount, setFactsViewedCount] = useState(0);
-  const [showUpgradeModal, setShowUpgradeModal] = React.useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const { trackEvent } = useAnalytics();
 
   useEffect(() => {
     const showBanner = localStorage.getItem("showTutorialBanner");
@@ -43,19 +51,40 @@ function FactCard() {
       });
 
       if (response.ok) {
+        // Get the metadata for the fact object
         const data = await response.json();
-        setFact(data.fact);
+        const fact = JSON.parse(data.fact);
+
+        setFact(fact);
       } else {
-        setFact("No interesting fact found. Please try again.");
+        setFact({
+          statement: "No interesting fact found. Please try again.",
+          topics: [],
+          category: "UNKNOWN",
+        });
       }
 
       setIsLoading(false);
     } catch (error) {
       console.error(error);
-      setFact("An error occurred. Please try again.");
+      setFact({
+        statement: "An error occurred. Please try again.",
+        topics: [],
+        category: "UNKNOWN",
+      });
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (fact) {
+      trackEvent("fact.view", {
+        fact_statement: fact.statement,
+        fact_topics: fact.topics,
+        fact_category: fact.category,
+      });
+    }
+  }, [fact]);
 
   const handleEmojiClick = (e) => {
     // Get the count for the facts viewed so far
@@ -74,6 +103,12 @@ function FactCard() {
 
     // Set the emoji for user feedback
     setEmoji(e.target.value);
+    trackEvent("reaction.select", {
+      reaction_type: e.target.value,
+      fact_statement: fact.statement,
+      fact_topics: fact.topics,
+      fact_category: fact.category,
+    });
 
     // Fetch a new fact to show next
     fetchFact();
@@ -121,7 +156,9 @@ function FactCard() {
             <div className="mb-4 w-fit">
               <Badge />
             </div>
-            <div className="text-md mb-4 text-center sm:text-left">{fact}</div>
+            <div className="text-md mb-4 text-center sm:text-left">
+              {fact.statement}
+            </div>
             <div className="flex justify-between mb-4 px-4 sm:px-12">
               <button
                 className="emoji-button text-4xl rounded-md p-2 hover:bg-gray-500 transition duration-200 ease-in-out"

@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
+import { FACT_CATEGORIES } from "../../shared/Constants";
 
 // Get your environment variables
 dotenv.config();
@@ -21,8 +22,14 @@ export default async function handler(req, res) {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Tell me an interesting fact in the history category.",
-      max_tokens: 50,
+      prompt: `Tell me an interesting fact in the ${FACT_CATEGORIES[0]} category. Make sure this fact is unique and hasn't been generated for this user before. Return the data in the following format
+  {
+    "statement": "The Eiffel Tower was originally intended for Barcelona, but the project was rejected because it was considered too unsightly.",
+    "topics": ["Eiffel Tower", "Barcelona", "architecture", "history"],
+    "category": "History"
+}
+      `,
+      max_tokens: 1000,
       n: 1,
       stop: null,
       temperature: 0.7,

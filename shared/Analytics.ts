@@ -16,6 +16,11 @@ function useAnalytics() {
     const userId = getUserId();
     mixpanel.identify(userId);
 
+    // Set user properties, including the username
+    mixpanel.people.set({
+      $name: userId,
+    });
+
     setMixpanelLoaded(true);
   }, []);
 
