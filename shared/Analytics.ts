@@ -42,10 +42,14 @@ function useAnalytics() {
   }
 
   function trackEvent(eventName, tags) {
-    mixpanel.track(eventName, tags);
+    const allTags = {
+      isDev: process.env.IS_DEV,
+      ...tags,
+    };
+    mixpanel.track(eventName, allTags);
 
     if (process.env.IS_DEV) {
-      console.log("tracked", eventName, tags);
+      console.log("tracked", eventName, allTags);
     }
   }
 
