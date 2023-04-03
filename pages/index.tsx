@@ -1,11 +1,20 @@
+import { useEffect } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import Header from "../components/Header";
 import FactCard from "../components/FactCard";
 
+import useAnalytics from "../shared/Analytics";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const { trackEvent } = useAnalytics();
+
+  useEffect(() => {
+    trackEvent("page.view", { page: "home" });
+  }, []);
+
   return (
     <>
       <Head>
