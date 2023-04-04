@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import mixpanel from "mixpanel-browser";
 import { v4 as uuid } from "uuid";
 
 function useAnalytics() {
-  const [mixpanelLoaded, setMixpanelLoaded] = useState(false);
   const isDevelopment = process.env.APP_ENV === "development";
 
   useEffect(() => {
@@ -21,8 +20,6 @@ function useAnalytics() {
     mixpanel.people.set({
       $name: userId,
     });
-
-    setMixpanelLoaded(true);
   }, []);
 
   function getUserId() {

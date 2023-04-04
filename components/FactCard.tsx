@@ -4,12 +4,13 @@ import TutorialBanner from "./TutorialBanner";
 import Badge from "./TopicBadge";
 import { FREE_FACTS_COUNT } from "../shared/Constants";
 import UpgradeModal from "./UpgradeModal";
-import useAnalytics from "../shared/Analytics";
+import useAnalytics from "../hooks/useAnalytics";
+import useTopics from "../hooks/useTopics";
 
 type Fact = {
   statement: string;
-  topics: string[];
-  category: string;
+  subtopics: string[];
+  topic: string;
 };
 
 function FactCard() {
@@ -21,6 +22,7 @@ function FactCard() {
   const [factsViewedCount, setFactsViewedCount] = useState(0);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { trackEvent } = useAnalytics();
+  const [selectedTopics] = useTopics();
 
   useEffect(() => {
     const showBanner = localStorage.getItem("showTutorialBanner");
@@ -42,8 +44,13 @@ function FactCard() {
   const fetchFact = async () => {
     setIsLoading(true);
 
+    const topics: string[] = JSON.parse(localStorage.getItem("topics"));
+
+    // Filter the fact by selected topics
+    const topicsString = topics.join(",");
+
     try {
-      const response = await fetch("/api/generateFact", {
+      const response = await fetch(`/api/generateFact?topics=${topicsString}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,8 +66,8 @@ function FactCard() {
       } else {
         setFact({
           statement: "No interesting fact found. Please try again.",
-          topics: [],
-          category: "UNKNOWN",
+          subtopics: [],
+          topic: "unknown",
         });
       }
 
@@ -69,8 +76,8 @@ function FactCard() {
       console.error(error);
       setFact({
         statement: "An error occurred. Please try again.",
-        topics: [],
-        category: "UNKNOWN",
+        subtopics: [],
+        topic: "unknown",
       });
       setIsLoading(false);
     }
@@ -80,8 +87,8 @@ function FactCard() {
     if (fact) {
       trackEvent("fact.view", {
         fact_statement: fact.statement,
-        fact_topics: fact.topics,
-        fact_category: fact.category,
+        fact_subtopics: fact.subtopics,
+        fact_topic: fact.topic,
       });
     }
   }, [fact]);
@@ -106,8 +113,8 @@ function FactCard() {
     trackEvent("reaction.select", {
       reaction_type: e.target.value,
       fact_statement: fact.statement,
-      fact_topics: fact.topics,
-      fact_category: fact.category,
+      fact_subtopics: fact.subtopics,
+      fact_topic: fact.topic,
     });
 
     // Fetch a new fact to show next
@@ -158,7 +165,7 @@ function FactCard() {
         ) : (
           <>
             <div className="mb-4 w-fit">
-              <Badge />
+              <Badge topic={fact.topic} />
             </div>
             <div className="text-md mb-4 text-center sm:text-left">
               {fact.statement}

@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
 import { useTheme } from "next-themes";
-import useAnalytics from "../shared/Analytics";
+import useAnalytics from "../hooks/useAnalytics";
+import useTopics from "../hooks/useTopics";
+import { FACT_TOPICS } from "../shared/Constants";
 
 function PreferencesModal(props) {
   const { dismissModal } = props;
   const { theme, setTheme } = useTheme();
   const { trackEvent } = useAnalytics();
+  const [selectedTopics, handleTopicClick] = useTopics();
 
   useEffect(() => {
     trackEvent("preferences.view", {});
@@ -67,31 +70,52 @@ function PreferencesModal(props) {
               </button>
             </div>
             <div
-              className="px-4 py-3 flex flex-col"
+              className="px-2 py-2 flex flex-col"
               style={{ height: "347px" }}
             >
-              <div className="w-full flex items-center justify-between">
-                <span className="font-semibold">Dark mode</span>
-                <label
-                  htmlFor="toggle"
-                  className="flex items-center cursor-pointer"
-                >
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      id="toggle"
-                      className="sr-only"
-                      onChange={toggleDarkMode}
-                      checked={theme === "dark"}
-                    />
-                    <div className="block bg-gray-400 dark:bg-gray-600 w-10 h-6 rounded-full"></div>
-                    <div
-                      className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all duration-300 ${
-                        theme === "dark" ? "transform translate-x-4" : ""
-                      }`}
-                    ></div>
-                  </div>
-                </label>
+              <div
+                className="px-4 py-3 flex flex-col"
+                style={{ height: "347px" }}
+              >
+                <h3 className="font-semibold mb-2">Topics</h3>
+                <div className="flex flex-wrap mb-4">
+                  {FACT_TOPICS.map((topic, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleTopicClick(topic)}
+                      className={`${
+                        selectedTopics.includes(topic)
+                          ? "bg-primary-light dark:bg-primary-dark text-white"
+                          : "bg-gray-400 dark:bg-gray-600 text-white"
+                      } px-3 py-1 m-1 rounded-full text-sm`}
+                    >
+                      {topic}
+                    </button>
+                  ))}
+                </div>
+                <div className="w-full flex items-center justify-between mt-10">
+                  <span className="font-semibold">Dark mode</span>
+                  <label
+                    htmlFor="toggle"
+                    className="flex items-center cursor-pointer"
+                  >
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        id="toggle"
+                        className="sr-only"
+                        onChange={toggleDarkMode}
+                        checked={theme === "dark"}
+                      />
+                      <div className="block bg-gray-400 dark:bg-gray-600 w-10 h-6 rounded-full"></div>
+                      <div
+                        className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all duration-300 ${
+                          theme === "dark" ? "transform translate-x-4" : ""
+                        }`}
+                      ></div>
+                    </div>
+                  </label>
+                </div>
               </div>
             </div>
           </div>

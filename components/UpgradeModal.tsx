@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import useAnalytics from "../shared/Analytics";
+import useAnalytics from "../hooks/useAnalytics";
 
 function UpgradeModal(props) {
   const { dismissModal, streakCount, factsViewedCount } = props;

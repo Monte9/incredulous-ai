@@ -1,11 +1,14 @@
-import React from "react";
-import { FACT_CATEGORIES } from "../shared/Constants";
+type Props = {
+  topic: string;
+};
 
-function Badge() {
+function Badge(props: Props) {
+  const { topic } = props;
+
   return (
     <div className="bg-primary-light dark:bg-primary-dark py-1 px-2 rounded-md">
       <p className="text-xs font-bold text-white">
-        {FACT_CATEGORIES[0].toLocaleUpperCase()}
+        {topic?.toUpperCase() || "UNKNOWN"}
       </p>
     </div>
   );
