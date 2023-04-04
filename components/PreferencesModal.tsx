@@ -27,14 +27,19 @@ function PreferencesModal(props) {
   }
 
   return (
-    <div className="fixed bottom-0 right-0 mr-4 mb-4" id="upgradeModal">
+    <div
+      className="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50"
+      id="preferencesModal"
+      onClick={closeModal}
+    >
       <div className="fixed inset-0 z-10 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen">
           <div
-            className="bg-background-light dark:bg-background-dark overflow-hidden sm:rounded-xl drop-shadow-lg transform w-screen sm:max-w-xl sm:w-full h-screen sm:max-h-lg sm:h-full justify-center"
+            className="stop-propagation bg-background-light dark:bg-background-dark overflow-hidden sm:rounded-xl drop-shadow-lg transform w-screen sm:max-w-xl sm:w-full h-screen sm:max-h-lg sm:h-full justify-center"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-headline"
+            onClick={(e) => e.stopPropagation()}
           >
             <div
               className="bg-background-light dark:bg-background-dark px-4 py-3 border-b border-gray-400 dark:border-gray-600 flex flex-row justify-between"
