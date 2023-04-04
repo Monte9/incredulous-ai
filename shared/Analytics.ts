@@ -4,11 +4,12 @@ import { v4 as uuid } from "uuid";
 
 function useAnalytics() {
   const [mixpanelLoaded, setMixpanelLoaded] = useState(false);
+  const isDevelopment = process.env.APP_ENV === "development";
 
   useEffect(() => {
     // Setup Mixpanel logging
     mixpanel.init(process.env.MIXPANEL_PROJECT_TOKEN, {
-      debug: process.env.IS_DEV,
+      debug: isDevelopment,
       ignore_dnt: true,
     });
 
@@ -43,12 +44,12 @@ function useAnalytics() {
 
   function trackEvent(eventName, tags) {
     const allTags = {
-      isDev: process.env.IS_DEV,
+      enviroment: process.env.APP_ENV,
       ...tags,
     };
     mixpanel.track(eventName, allTags);
 
-    if (process.env.IS_DEV) {
+    if (isDevelopment) {
       console.log("tracked", eventName, allTags);
     }
   }

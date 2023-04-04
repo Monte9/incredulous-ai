@@ -4,7 +4,7 @@ const nextConfig = {
   env: {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     MIXPANEL_PROJECT_TOKEN: process.env.MIXPANEL_PROJECT_TOKEN,
-    IS_DEV: process.env.IS_DEV
+    APP_ENV: process.env.APP_ENV,
   }
 }
 
