@@ -139,7 +139,7 @@ function FactCard() {
         </div>
       </div>
       <div
-        className="flex flex-col sm:max-w-xl rounded-lg shadow-lg my-2 sm:my-0"
+        className="flex flex-col sm:max-w-xl rounded-lg my-2 sm:my-0"
         style={{
           minHeight: "350px",
           justifyContent: "center",
@@ -165,7 +165,7 @@ function FactCard() {
             </div>
             <div className="flex justify-between mb-4 px-4 sm:px-12">
               <button
-                className="emoji-button text-4xl rounded-md p-2 hover:bg-gray-500 transition duration-200 ease-in-out"
+                className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
                 value="mind-blowing"
                 onClick={handleEmojiClick}
                 style={{ minWidth: "56px", minHeight: "56px" }}
@@ -173,7 +173,7 @@ function FactCard() {
                 🤯
               </button>
               <button
-                className="emoji-button text-4xl rounded-md p-2 hover:bg-gray-500 transition duration-200 ease-in-out"
+                className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
                 value="interesting"
                 onClick={handleEmojiClick}
                 style={{ minWidth: "56px", minHeight: "56px" }}
@@ -181,7 +181,7 @@ function FactCard() {
                 🤔
               </button>
               <button
-                className="emoji-button text-4xl rounded-md p-2 hover:bg-gray-500 transition duration-200 ease-in-out"
+                className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
                 value="heart-warming"
                 onClick={handleEmojiClick}
                 style={{ minWidth: "56px", minHeight: "56px" }}
@@ -189,7 +189,7 @@ function FactCard() {
                 💜
               </button>
               <button
-                className="emoji-button text-4xl rounded-md p-2 hover:bg-gray-500 transition duration-200 ease-in-out"
+                className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
                 value="meh"
                 onClick={handleEmojiClick}
                 style={{ minWidth: "56px", minHeight: "56px" }}

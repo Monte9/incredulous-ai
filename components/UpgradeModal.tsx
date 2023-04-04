@@ -29,29 +29,34 @@ function UpgradeModal(props) {
   }
 
   return (
-    <div className="fixed bottom-0 right-0 mr-4 mb-4" id="upgradeModal">
+    <div
+      className="fixed inset-0 z-10 overflow-y-auto bg-black bg-opacity-50"
+      id="upgradeModal"
+      onClick={closeModal}
+    >
       <div className="fixed inset-0 z-10 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen px-4">
           <div
-            className="bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-xl sm:w-full justify-center"
+            className="stop-propagation bg-background-light dark:bg-background-dark rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-xl sm:w-full justify-center"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-headline"
             style={{ height: "400px" }}
+            onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="bg-gray-800 px-4 py-3 border-b flex flex-row justify-between"
+              className="bg-background-light dark:bg-background-dark px-4 py-3 border-b border-gray-400 dark:border-gray-600 flex flex-row justify-between"
               style={{ height: "53px" }}
             >
               <h2
-                className="text-xl font-bold text-gray-200"
+                className="text-xl font-bold text-bright-light dark:text-bright-dark"
                 id="modal-headline"
               >
                 Upgrade
               </h2>
               <button
                 onClick={closeModal}
-                className="text-gray-400 hover:text-gray-500 transition duration-200 ease-in-out"
+                className="text-bright-light dark:text-bright-dark transition duration-200 ease-in-out"
               >
                 <span className="sr-only">Close</span>
                 <svg
@@ -78,13 +83,13 @@ function UpgradeModal(props) {
               <div className="mt-6 flex flex-col sm:flex-row justify-end sm:items-end sm:justify-between h-full">
                 <button
                   onClick={() => handleBuy(50, 0.99)}
-                  className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-700 active:bg-blue-700 transition duration-150 ease-in-out mb-2 h-auto sm:h-12"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-primary-light dark:bg-primary-dark focus:outline-none focus:shadow-outline-blue transition duration-150 ease-in-out mb-2 h-auto sm:h-12 active:animate-scaleBounce"
                 >
                   Buy 50 facts for $0.99
                 </button>
                 <button
                   onClick={() => handleBuy(200, 1.99)}
-                  className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-700 active:bg-blue-700 transition duration-150 ease-in-out mb-2 h-auto sm:h-12"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-primary-light dark:bg-primary-dark focus:outline-none focus:shadow-outline-blue transition duration-150 ease-in-out mb-2 h-auto sm:h-12 active:animate-scaleBounce"
                 >
                   Buy 200 facts for $1.99
                 </button>
