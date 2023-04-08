@@ -6,11 +6,14 @@ import FactCard from "../components/FactCard";
 
 import useAnalytics from "../hooks/useAnalytics";
 import PreferencesModal from "../components/PreferencesModal";
+import useTopics from "../hooks/useTopics";
+import { FaSpinner } from "react-icons/fa";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+  const { isLoading } = useTopics();
   const { trackEvent } = useAnalytics();
 
   useEffect(() => {
@@ -32,9 +35,15 @@ export default function Home() {
             dismissModal={() => setShowPreferencesModal(false)}
           />
         ) : null}
-        <div className="flex-1 flex flex-col justify-center items-center p-2 sm:p-16">
-          <FactCard />
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <FaSpinner className="animate-spin h-6 w-6 text-gray-500" />
+          </div>
+        ) : (
+          <div className="flex-1 flex flex-col justify-center items-center p-2 sm:p-16">
+            <FactCard />
+          </div>
+        )}
       </main>
     </>
   );

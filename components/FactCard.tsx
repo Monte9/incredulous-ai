@@ -21,8 +21,8 @@ function FactCard() {
   const [streakCount, setStreakCount] = useState(0);
   const [factsViewedCount, setFactsViewedCount] = useState(0);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const { isLoading: isTopicsLoading, selectedTopics } = useTopics();
   const { trackEvent } = useAnalytics();
-  const [selectedTopics] = useTopics();
 
   useEffect(() => {
     const showBanner = localStorage.getItem("showTutorialBanner");
@@ -44,10 +44,12 @@ function FactCard() {
   const fetchFact = async () => {
     setIsLoading(true);
 
-    const topics: string[] = JSON.parse(localStorage.getItem("topics"));
+    if (!selectedTopics) {
+      return;
+    }
 
     // Filter the fact by selected topics
-    const topicsString = topics.join(",");
+    const topicsString = selectedTopics.join(",");
 
     try {
       const response = await fetch(`/api/generateFact?topics=${topicsString}`, {
@@ -82,6 +84,12 @@ function FactCard() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("got these topics", selectedTopics);
+    fetchFact();
+    console.log("here");
+  }, [selectedTopics, isTopicsLoading]);
 
   useEffect(() => {
     if (fact) {
@@ -139,12 +147,6 @@ function FactCard() {
           factsViewedCount={factsViewedCount}
         />
       ) : null}
-      <div className="flex flex-row mx-auto mb-2 w-full justify-between">
-        <div className="text-sm">Streak: {streakCount} 🔥</div>
-        <div className="text-sm">
-          Facts Viewed: {factsViewedCount}/{FREE_FACTS_COUNT}
-        </div>
-      </div>
       <div
         className="flex flex-col sm:max-w-xl rounded-lg my-2 sm:my-0"
         style={{

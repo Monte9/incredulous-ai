@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { FACT_TOPICS } from "../shared/Constants";
 
-type UseTopicsType = [string[], (topic: string) => void];
+type UseTopicsType = {
+  isLoading: boolean;
+  selectedTopics: string[];
+  handleTopicClick: (topic: string) => void;
+};
 
 const useTopics = (): UseTopicsType => {
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedTopics, setSelectedTopics] = useState([]);
 
   useEffect(() => {
@@ -16,6 +21,8 @@ const useTopics = (): UseTopicsType => {
     } else {
       setSelectedTopics(topics);
     }
+
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -23,6 +30,7 @@ const useTopics = (): UseTopicsType => {
   }, [selectedTopics]);
 
   const handleTopicClick = (topic: string) => {
+    setIsLoading(true);
     let newSelectedTopics = [];
 
     if (selectedTopics.includes(topic)) {
@@ -31,10 +39,13 @@ const useTopics = (): UseTopicsType => {
       newSelectedTopics = [...selectedTopics, topic];
     }
 
+    console.log("newSelectedTopics", newSelectedTopics);
+
     setSelectedTopics(newSelectedTopics);
+    setIsLoading(false);
   };
 
-  return [selectedTopics, handleTopicClick];
+  return { isLoading, selectedTopics, handleTopicClick };
 };
 
 export default useTopics;

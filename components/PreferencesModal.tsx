@@ -8,7 +8,7 @@ function PreferencesModal(props) {
   const { dismissModal } = props;
   const { theme, setTheme } = useTheme();
   const { trackEvent } = useAnalytics();
-  const [selectedTopics, handleTopicClick] = useTopics();
+  const { selectedTopics, handleTopicClick } = useTopics();
 
   useEffect(() => {
     trackEvent("preferences.view", {});
