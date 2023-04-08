@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import mixpanel from "mixpanel-browser";
-import { v4 as uuid } from "uuid";
+import useFactsState from "./useFactsState";
 
 function useAnalytics() {
   const isDevelopment = process.env.APP_ENV === "development";
+  const { userId } = useFactsState();
 
   useEffect(() => {
     // Setup Mixpanel logging
@@ -13,7 +14,6 @@ function useAnalytics() {
     });
 
     // Set this to a unique identifier for the user performing the event
-    const userId = getUserId();
     mixpanel.identify(userId);
 
     // Set user properties, including the username
@@ -21,23 +21,6 @@ function useAnalytics() {
       $name: userId,
     });
   }, []);
-
-  function getUserId() {
-    // Get the user Id from local storage
-    const userId = localStorage.getItem("uuid");
-
-    if (userId) {
-      return userId;
-    }
-
-    // Generate a new UUID for the user
-    const newUserId = uuid();
-
-    // Update the user Id in local storage
-    localStorage.setItem("uuid", newUserId);
-
-    return newUserId;
-  }
 
   function trackEvent(eventName, tags) {
     const allTags = {

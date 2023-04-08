@@ -1,14 +1,11 @@
 import React, { useEffect } from "react";
 import { useTheme } from "next-themes";
 import useAnalytics from "../hooks/useAnalytics";
-import useTopics from "../hooks/useTopics";
-import { FACT_TOPICS } from "../shared/Constants";
 
 function PreferencesModal(props) {
   const { dismissModal } = props;
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const { trackEvent } = useAnalytics();
-  const { selectedTopics, handleTopicClick } = useTopics();
 
   useEffect(() => {
     trackEvent("preferences.view", {});
@@ -20,11 +17,11 @@ function PreferencesModal(props) {
   }
 
   function toggleDarkMode() {
-    const newTheme = theme === "dark" ? "light" : "dark";
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
     setTheme(newTheme);
 
     trackEvent("darkmode.toggle", {
-      oldTheme: theme,
+      oldTheme: resolvedTheme,
       newTheme,
     });
   }
@@ -78,20 +75,8 @@ function PreferencesModal(props) {
                 style={{ height: "347px" }}
               >
                 <h3 className="font-semibold mb-2">Topics</h3>
-                <div className="flex flex-wrap mb-4">
-                  {FACT_TOPICS.map((topic, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleTopicClick(topic)}
-                      className={`${
-                        selectedTopics.includes(topic)
-                          ? "bg-primary-light dark:bg-primary-dark text-white"
-                          : "bg-gray-400 dark:bg-gray-600 text-white"
-                      } px-3 py-1 m-1 rounded-full text-sm`}
-                    >
-                      {topic}
-                    </button>
-                  ))}
+                <div className="flex flex-wrap mb-4 text-xs">
+                  Coming soon...
                 </div>
                 <div className="w-full flex items-center justify-between mt-10">
                   <span className="font-semibold">Dark mode</span>
@@ -105,12 +90,14 @@ function PreferencesModal(props) {
                         id="toggle"
                         className="sr-only"
                         onChange={toggleDarkMode}
-                        checked={theme === "dark"}
+                        checked={resolvedTheme === "dark"}
                       />
                       <div className="block bg-gray-400 dark:bg-gray-600 w-10 h-6 rounded-full"></div>
                       <div
                         className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all duration-300 ${
-                          theme === "dark" ? "transform translate-x-4" : ""
+                          resolvedTheme === "dark"
+                            ? "transform translate-x-4"
+                            : ""
                         }`}
                       ></div>
                     </div>

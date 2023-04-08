@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { FaSpinner } from "react-icons/fa";
 import TutorialBanner from "./TutorialBanner";
 import Badge from "./TopicBadge";
-import { FREE_FACTS_COUNT } from "../shared/Constants";
+import { FACT_TOPICS, FREE_FACTS_COUNT } from "../shared/Constants";
 import UpgradeModal from "./UpgradeModal";
 import useAnalytics from "../hooks/useAnalytics";
-import useTopics from "../hooks/useTopics";
+import useFactsState from "../hooks/useFactsState";
 
 type Fact = {
   statement: string;
@@ -17,39 +17,29 @@ function FactCard() {
   const [emoji, setEmoji] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [fact, setFact] = useState<Fact | null>(null);
-  const [showTutorialBanner, setShowTutorialBanner] = useState(false);
-  const [streakCount, setStreakCount] = useState(0);
-  const [factsViewedCount, setFactsViewedCount] = useState(0);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const { isLoading: isTopicsLoading, selectedTopics } = useTopics();
+
+  const {
+    streakCount,
+    setStreakCount,
+    showTutorialBanner,
+    setShowTutorialBanner,
+    viewedFactsCount,
+    setViewedFactsCount,
+    unlockedFactsCount,
+    setUnlockedFactsCount,
+  } = useFactsState();
   const { trackEvent } = useAnalytics();
 
   useEffect(() => {
-    const showBanner = localStorage.getItem("showTutorialBanner");
-    if (showBanner === "false") {
-      setShowTutorialBanner(false);
-    } else {
-      setShowTutorialBanner(true);
-    }
-
-    const factsCount = parseInt(localStorage.getItem("factsViewedCount"));
-    if (factsCount) {
-      const parsedFactsCount = isNaN(factsCount) ? 1 : factsCount;
-      setFactsViewedCount(parsedFactsCount);
-    }
-
     fetchFact();
   }, []);
 
   const fetchFact = async () => {
     setIsLoading(true);
 
-    if (!selectedTopics) {
-      return;
-    }
-
     // Filter the fact by selected topics
-    const topicsString = selectedTopics.join(",");
+    const topicsString = FACT_TOPICS.join(",");
 
     try {
       const response = await fetch(`/api/generateFact?topics=${topicsString}`, {
@@ -86,12 +76,6 @@ function FactCard() {
   };
 
   useEffect(() => {
-    console.log("got these topics", selectedTopics);
-    fetchFact();
-    console.log("here");
-  }, [selectedTopics, isTopicsLoading]);
-
-  useEffect(() => {
     if (fact) {
       trackEvent("fact.view", {
         fact_statement: fact.statement,
@@ -102,19 +86,17 @@ function FactCard() {
   }, [fact]);
 
   const handleEmojiClick = (e) => {
-    // Get the count for the facts viewed so far
-    const factsCount = parseInt(localStorage.getItem("factsViewedCount"));
-    const newFactsCount = isNaN(factsCount) ? 1 : factsViewedCount + 1;
+    // Get the updated facts viewed count
+    const newFactsCount = viewedFactsCount + 1;
 
     // If the user doesn't have any more free facts, then show them the upgrade modal
-    if (newFactsCount > FREE_FACTS_COUNT) {
+    if (newFactsCount > unlockedFactsCount) {
       setShowUpgradeModal(true);
       return;
     }
 
     // Update the facts viewed count in local storage
-    localStorage.setItem("factsViewedCount", String(newFactsCount));
-    setFactsViewedCount(newFactsCount);
+    setViewedFactsCount(newFactsCount);
 
     // Set the emoji for user feedback
     setEmoji(e.target.value);
@@ -128,9 +110,8 @@ function FactCard() {
     // Fetch a new fact to show next
     fetchFact();
 
-    const showBanner = localStorage.getItem("showTutorialBanner");
-    if (!showBanner) {
-      localStorage.setItem("showTutorialBanner", "false");
+    // If the user has seen the tutorial banner, then hide it
+    if (showTutorialBanner) {
       setShowTutorialBanner(false);
     }
 
@@ -138,15 +119,32 @@ function FactCard() {
     setStreakCount(streakCount + 1);
   };
 
+  const handleDismissUpgradeModal = () => {
+    setShowUpgradeModal(false);
+  };
+
+  // Add the callback function
+  const handleUnlockedFactsCountUpdated = () => {
+    // Set the facts count for the free version
+    setUnlockedFactsCount(FREE_FACTS_COUNT);
+  };
+
   return (
     <div className="flex flex-col w-full sm:max-w-xl px-5 mx-auto">
       {showUpgradeModal ? (
         <UpgradeModal
-          dismissModal={() => setShowUpgradeModal(false)}
+          dismissModal={handleDismissUpgradeModal}
           streakCount={streakCount}
-          factsViewedCount={factsViewedCount}
+          factsViewedCount={viewedFactsCount}
+          onUnlockedFactsCountUpdated={handleUnlockedFactsCountUpdated}
         />
       ) : null}
+      <div className="flex flex-row mx-auto mb-2 w-full justify-between">
+        <div className="text-sm">Streak: {streakCount} 🔥</div>
+        <div className="text-sm">
+          Facts Viewed: {viewedFactsCount}/{unlockedFactsCount}
+        </div>
+      </div>
       <div
         className="flex flex-col sm:max-w-xl rounded-lg my-2 sm:my-0"
         style={{
