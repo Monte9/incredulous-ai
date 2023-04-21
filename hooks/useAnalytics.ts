@@ -19,6 +19,7 @@ function useAnalytics() {
     // Set user properties, including the username
     mixpanel.people.set({
       $name: userId,
+      $app: process.env.APP_NAME,
     });
   }, []);
 
