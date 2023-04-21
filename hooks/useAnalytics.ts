@@ -25,6 +25,7 @@ function useAnalytics() {
   function trackEvent(eventName, tags) {
     const allTags = {
       enviroment: process.env.APP_ENV,
+      app: process.env.APP_NAME,
       ...tags,
     };
     mixpanel.track(eventName, allTags);
