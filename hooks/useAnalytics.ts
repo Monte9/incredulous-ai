@@ -16,10 +16,32 @@ function useAnalytics() {
     // Set this to a unique identifier for the user performing the event
     mixpanel.identify(userId);
 
+    // Get the UTM params from the URL
+    // https://incredulous.ai/?utm_source=google&utm_medium=paid-search&utm_campaign=incredulous-v1
+    let utmParams = {};
+    if (window.location.search.includes("utm")) {
+      utmParams = Object.fromEntries(
+        window.location.search
+          .replace("?", "")
+          .split("&")
+          .filter((param) => param.startsWith("utm_"))
+          .map((param) => param.split("="))
+      );
+    }
+
+    console.info(
+      "%c[Analytics] %c%s",
+      "color:green",
+      "color:orange",
+      userId,
+      utmParams
+    );
+
     // Set user properties, including the username
     mixpanel.people.set({
       $name: userId,
       $app: process.env.APP_NAME,
+      utmParams,
     });
   }, []);
 
@@ -32,7 +54,13 @@ function useAnalytics() {
     mixpanel.track(eventName, allTags);
 
     if (isDevelopment) {
-      console.log("tracked", eventName, allTags);
+      console.info(
+        "%c[Analytics] %c%s",
+        "color:green",
+        "color:orange",
+        eventName,
+        allTags
+      );
     }
   }
 
