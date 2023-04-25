@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import mixpanel from "mixpanel-browser";
 import useFactsState from "./useFactsState";
+import { IS_DEVELOPMENT } from "../shared/Constants";
 
 function useAnalytics() {
-  const isDevelopment = process.env.APP_ENV === "development";
   const { userId } = useFactsState();
 
   useEffect(() => {
     // Setup Mixpanel logging
     mixpanel.init(process.env.MIXPANEL_PROJECT_TOKEN, {
-      debug: isDevelopment,
+      debug: IS_DEVELOPMENT,
       ignore_dnt: true,
     });
 
@@ -29,13 +29,15 @@ function useAnalytics() {
       );
     }
 
-    console.info(
-      "%c[Analytics] %c%s",
-      "color:green",
-      "color:orange",
-      userId,
-      utmParams
-    );
+    if (IS_DEVELOPMENT) {
+      console.info(
+        "%c[Analytics] %c%s",
+        "color:green",
+        "color:orange",
+        userId,
+        utmParams
+      );
+    }
 
     // Set user properties, including the username
     mixpanel.people.set({
@@ -53,7 +55,7 @@ function useAnalytics() {
     };
     mixpanel.track(eventName, allTags);
 
-    if (isDevelopment) {
+    if (IS_DEVELOPMENT) {
       console.info(
         "%c[Analytics] %c%s",
         "color:green",

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "airtable": "^0.11.6",
     "dotenv": "^16.0.3",
     "email-validator": "^2.0.4",
     "eslint": "8.35.0",

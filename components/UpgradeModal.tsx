@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import validator from "email-validator";
 import useAnalytics from "../hooks/useAnalytics";
 import useFactsState from "../hooks/useFactsState";
+import useAddToAirtable from "../hooks/useAddToAirtable";
 
 function UpgradeModal(props) {
   const {
@@ -13,7 +14,9 @@ function UpgradeModal(props) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(null);
   const { trackEvent } = useAnalytics();
-  const { isFreeVersionUnlocked, setIsFreeVersionUnlocked } = useFactsState();
+  const { userId, isFreeVersionUnlocked, setIsFreeVersionUnlocked } =
+    useFactsState();
+  const { addToAirtable } = useAddToAirtable();
 
   useEffect(() => {
     trackEvent("upgrade.view", {
@@ -22,7 +25,7 @@ function UpgradeModal(props) {
     });
   }, []);
 
-  function handleEmailSubmit() {
+  async function handleEmailSubmit() {
     if (email.length < 5) {
       setEmailError("Email is too short");
     } else if (!validator.validate(email)) {
@@ -37,6 +40,9 @@ function UpgradeModal(props) {
       if (typeof onUnlockedFactsCountUpdated === "function") {
         onUnlockedFactsCountUpdated();
       }
+
+      // Add email and userId to Airtable using the custom hook
+      await addToAirtable(email, userId);
 
       // Track Analytics event
       trackEvent("buy.action", {
