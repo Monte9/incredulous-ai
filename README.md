@@ -7,7 +7,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Getting Started
 
 ```bash
-yarn
+git clone git@github.com:Monte9/incredulous-ai.git
+cd incredulous-ai && yarn
+
 yarn dev
 ```
 
