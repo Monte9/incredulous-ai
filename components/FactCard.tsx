@@ -50,27 +50,35 @@ function FactCard() {
       });
 
       if (response.ok) {
-        // Get the metadata for the fact object
         const data = await response.json();
-        const fact = JSON.parse(data.fact);
 
-        setFact(fact);
+        // The fact is now already parsed in the API
+        if (data.fact && typeof data.fact === 'object') {
+          setFact({
+            statement: data.fact.statement || "No statement provided",
+            subtopics: data.fact.subtopics || [],
+            topic: data.fact.topic || "unknown"
+          });
+        } else {
+          throw new Error('Invalid fact format received');
+        }
       } else {
+        const errorData = await response.json();
+        console.error('API Error:', errorData);
         setFact({
-          statement: "No interesting fact found. Please try again.",
+          statement: errorData.error || "No interesting fact found. Please try again.",
           subtopics: [],
           topic: "unknown",
         });
       }
-
-      setIsLoading(false);
     } catch (error) {
-      console.error(error);
+      console.error('Fetch error:', error);
       setFact({
-        statement: "An error occurred. Please try again.",
+        statement: error instanceof Error ? error.message : "An error occurred. Please try again.",
         subtopics: [],
         topic: "unknown",
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -85,7 +93,7 @@ function FactCard() {
     }
   }, [fact]);
 
-  const handleEmojiClick = (e) => {
+  const handleEmojiClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     // Get the updated facts viewed count
     const newFactsCount = viewedFactsCount + 1;
 
@@ -99,13 +107,17 @@ function FactCard() {
     setViewedFactsCount(newFactsCount);
 
     // Set the emoji for user feedback
-    setEmoji(e.target.value);
-    trackEvent("reaction.select", {
-      reaction_type: e.target.value,
-      fact_statement: fact.statement,
-      fact_subtopics: fact.subtopics,
-      fact_topic: fact.topic,
-    });
+    const button = e.target as HTMLButtonElement;
+    setEmoji(button.value);
+
+    if (fact) {
+      trackEvent("reaction.select", {
+        reaction_type: button.value,
+        fact_statement: fact.statement,
+        fact_subtopics: fact.subtopics,
+        fact_topic: fact.topic,
+      });
+    }
 
     // Fetch a new fact to show next
     fetchFact();

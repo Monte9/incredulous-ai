@@ -15,16 +15,8 @@ yarn dev
 
 Navigate to [http://localhost:3000](http://localhost:3000) to start developing.
 
-## Deploy on Vercel
+### Tools
 
-This website is deployed on the [Vercel Platform](https://vercel.com/).
-
-## Next.js Docs
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Tracking signups on [Airtable](https://airtable.com/invite/l?inviteId=invEpNqrTNytlCqfG&inviteToken=206adf6e1a2422cd9cdffa1029379a0cd529f8bed11b0905d0fe931b7be118ac&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts)
+- Analytics on [Mixpanel](https://mixpanel.com/s/1sokbM)
+- Deployed on [Vercel](https://vercel.com/monte-thakkars-projects/incredulous-ai)
