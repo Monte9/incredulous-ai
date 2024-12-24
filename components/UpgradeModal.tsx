@@ -7,7 +7,6 @@ import useAddToAirtable from "../hooks/useAddToAirtable";
 function UpgradeModal(props) {
   const {
     dismissModal,
-    streakCount,
     factsViewedCount,
     onUnlockedFactsCountUpdated,
   } = props;
@@ -20,7 +19,6 @@ function UpgradeModal(props) {
 
   useEffect(() => {
     trackEvent("upgrade.view", {
-      streak: streakCount,
       factsViewed: factsViewedCount,
     });
   }, []);
@@ -49,7 +47,6 @@ function UpgradeModal(props) {
         email,
         facts: "50",
         price: "free",
-        streak: streakCount,
         factsViewed: factsViewedCount,
       });
     }
@@ -59,14 +56,12 @@ function UpgradeModal(props) {
     trackEvent("buy.action", {
       facts: "unlimited",
       price: "1.99",
-      streak: streakCount,
       factsViewed: factsViewedCount,
     });
   }
 
   function closeModal() {
     trackEvent("upgrade.close", {
-      streak: streakCount,
       factsViewed: factsViewedCount,
     });
 
@@ -131,10 +126,9 @@ function UpgradeModal(props) {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className={`flex-grow border ${
-                        emailError &&
+                      className={`flex-grow border ${emailError &&
                         "border-primary-light dark:border-primary-dark"
-                      } rounded-md px-2 py-1 text-sm focus:outline-none`}
+                        } rounded-md px-2 py-1 text-sm focus:outline-none`}
                       placeholder="Email"
                     />
                     <button

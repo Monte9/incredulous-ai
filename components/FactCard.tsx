@@ -12,15 +12,25 @@ type Fact = {
   topic: string;
 };
 
+type Emoji = {
+  value: string
+  emoji: string
+}
+
+const emojiButtons: Emoji[] = [
+  { value: "love", emoji: "❤️" },
+  { value: "laugh", emoji: "😂" },
+  { value: "sad", emoji: "😢" },
+  { value: "interesting", emoji: "🔥" },
+];
+
 function FactCard() {
-  const [emoji, setEmoji] = useState("");
+  const [emoji, setEmoji] = useState<Emoji | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [fact, setFact] = useState<Fact | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const {
-    streakCount,
-    setStreakCount,
     showTutorialBanner,
     setShowTutorialBanner,
     viewedFactsCount,
@@ -101,7 +111,8 @@ function FactCard() {
 
     // Set the emoji for user feedback
     const button = e.target as HTMLButtonElement;
-    setEmoji(button.value);
+    const emoji = emojiButtons.find(e => e.value === button.value)
+    setEmoji(emoji);
 
     if (fact) {
       trackEvent("reaction.select", {
@@ -118,9 +129,6 @@ function FactCard() {
     if (showTutorialBanner) {
       setShowTutorialBanner(false);
     }
-
-    // Update the streak count
-    setStreakCount(streakCount + 1);
   };
 
   const handleDismissUpgradeModal = () => {
@@ -138,13 +146,11 @@ function FactCard() {
       {showUpgradeModal ? (
         <UpgradeModal
           dismissModal={handleDismissUpgradeModal}
-          streakCount={streakCount}
           factsViewedCount={viewedFactsCount}
           onUnlockedFactsCountUpdated={handleUnlockedFactsCountUpdated}
         />
       ) : null}
-      <div className="flex flex-row mx-auto mb-2 w-full justify-between">
-        <div className="text-sm">Streak: {streakCount} 🔥</div>
+      <div className="flex flex-row mx-auto mb-2 w-full justify-end">
         <div className="text-sm">
           Facts Viewed: {viewedFactsCount}/{unlockedFactsCount}
         </div>
@@ -159,8 +165,8 @@ function FactCard() {
         {isLoading ? (
           <div className="flex justify-center items-center">
             {emoji ? (
-              <div className="text-md mb-4 text-center sm:text-left">
-                You found that {emoji}.
+              <div className="text-4xl mb-4 text-center sm:text-left">
+                {emoji.emoji}
               </div>
             ) : (
               <FaSpinner className="animate-spin h-6 w-6 text-gray-500" />
@@ -175,38 +181,17 @@ function FactCard() {
               {fact.statement}
             </div>
             <div className="flex justify-between mb-4 px-4 sm:px-12">
-              <button
-                className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
-                value="mind-blowing"
-                onClick={handleEmojiClick}
-                style={{ minWidth: "56px", minHeight: "56px" }}
-              >
-                🤯
-              </button>
-              <button
-                className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
-                value="interesting"
-                onClick={handleEmojiClick}
-                style={{ minWidth: "56px", minHeight: "56px" }}
-              >
-                🤔
-              </button>
-              <button
-                className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
-                value="heart-warming"
-                onClick={handleEmojiClick}
-                style={{ minWidth: "56px", minHeight: "56px" }}
-              >
-                💜
-              </button>
-              <button
-                className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
-                value="meh"
-                onClick={handleEmojiClick}
-                style={{ minWidth: "56px", minHeight: "56px" }}
-              >
-                😑
-              </button>
+              {emojiButtons.map((button) => (
+                <button
+                  key={button.value}
+                  className="emoji-button text-4xl rounded-md p-2 transition duration-200 ease-in-out"
+                  value={button.value}
+                  onClick={handleEmojiClick}
+                  style={{ minWidth: "56px", minHeight: "56px" }}
+                >
+                  {button.emoji}
+                </button>
+              ))}
             </div>
           </>
         )}

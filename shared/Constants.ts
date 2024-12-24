@@ -1,6 +1,6 @@
 export const IS_DEVELOPMENT = process.env.APP_ENV === "development";
 
-export const DEFAULT_FACTS_COUNT = 5;
+export const DEFAULT_FACTS_COUNT = 500;
 export const FREE_FACTS_COUNT = 50;
 export const PAID_FACTS_COUNT = 999999;
 

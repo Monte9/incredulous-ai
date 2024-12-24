@@ -11,8 +11,6 @@ import {
 import useLocalStorage from "./useLocalStorage";
 
 function useFactsState() {
-  const [streakCount, setStreakCount] = useState(1);
-
   const [userId, setUserId] = useLocalStorage(LS_UUID, uuid());
 
   const [showTutorialBanner, setShowTutorialBanner] = useLocalStorage(
@@ -38,8 +36,6 @@ function useFactsState() {
   return {
     userId,
     setUserId,
-    streakCount,
-    setStreakCount,
     showTutorialBanner,
     setShowTutorialBanner,
     viewedFactsCount,
