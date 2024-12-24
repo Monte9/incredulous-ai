@@ -9,7 +9,6 @@ import useFactsState from "../hooks/useFactsState";
 
 type Fact = {
   statement: string;
-  subtopics: string[];
   topic: string;
 };
 
@@ -51,13 +50,10 @@ function FactCard() {
 
       if (response.ok) {
         const data = await response.json();
-
-        // The fact is now already parsed in the API
-        if (data.fact && typeof data.fact === 'object') {
+        if (typeof data === 'object') {
           setFact({
-            statement: data.fact.statement || "No statement provided",
-            subtopics: data.fact.subtopics || [],
-            topic: data.fact.topic || "unknown"
+            statement: data.fact || "No fact provided",
+            topic: data.topic || "unknown"
           });
         } else {
           throw new Error('Invalid fact format received');
@@ -67,7 +63,6 @@ function FactCard() {
         console.error('API Error:', errorData);
         setFact({
           statement: errorData.error || "No interesting fact found. Please try again.",
-          subtopics: [],
           topic: "unknown",
         });
       }
@@ -75,7 +70,6 @@ function FactCard() {
       console.error('Fetch error:', error);
       setFact({
         statement: error instanceof Error ? error.message : "An error occurred. Please try again.",
-        subtopics: [],
         topic: "unknown",
       });
     } finally {
@@ -87,7 +81,6 @@ function FactCard() {
     if (fact) {
       trackEvent("fact.view", {
         fact_statement: fact.statement,
-        fact_subtopics: fact.subtopics,
         fact_topic: fact.topic,
       });
     }
@@ -114,7 +107,6 @@ function FactCard() {
       trackEvent("reaction.select", {
         reaction_type: button.value,
         fact_statement: fact.statement,
-        fact_subtopics: fact.subtopics,
         fact_topic: fact.topic,
       });
     }
