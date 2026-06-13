@@ -1,25 +1,28 @@
-// useAddToAirtable.js
+// useAddToAirtable.ts
+//
+// Sends a signup to the server-side /api/subscribe route, which performs the
+// Airtable write using the secret API key. The key is NEVER exposed to the
+// browser (previously it was inlined into the client bundle — see SECURITY.md).
 import { useCallback } from "react";
-import Airtable from "airtable";
 import { IS_DEVELOPMENT } from "../shared/Constants";
 
 const useAddToAirtable = () => {
-  const addToAirtable = useCallback(async (email, userId) => {
+  const addToAirtable = useCallback(async (email: string, userId: string) => {
     try {
-      // Configure Airtable with the API key
-      Airtable.configure({ apiKey: process.env.AIRTABLE_API_KEY });
-
-      // Setup the Airtable base
-      const base = Airtable.base("appxkqWce0l5WTsRM");
-
-      // Add the record to Airtable using the table name
-      const record = await base("tbleQlmKOdrbA6BVF").create({
-        UUID: userId,
-        Email: email,
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, userId }),
       });
 
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to save email");
+      }
+
       if (IS_DEVELOPMENT) {
-        console.log("Record added successfully:", record.getId());
+        const data = await response.json().catch(() => ({}));
+        console.log("Record added successfully:", data.id);
       }
     } catch (error) {
       console.error("Error saving email:", error);
