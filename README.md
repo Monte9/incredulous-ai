@@ -3,6 +3,7 @@
 <p align="center"><b>AI-powered fact generator delivering daily astonishment — one incredible fact at a time.</b></p>
 
 <p align="center">
+  <a href="https://www.incredulous.ai/"><img alt="Live Demo" src="https://img.shields.io/badge/Live_Demo-incredulous.ai-22c55e" /></a>
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-14-000000?logo=next.js&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white" />
@@ -10,14 +11,30 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="Incredulous AI" width="820" />
+  <img src="docs/screenshot-home.png" alt="Incredulous AI" width="820" />
 </p>
 
 ## Why Incredulous AI?
 
 The internet is mostly noise. Incredulous AI is a small antidote: open it and you get **one** genuinely surprising fact — react with an emoji, and the next one appears. No feed, no infinite scroll, just a steady drip of _"wait, really?"_
 
-Facts are generated on demand by OpenAI across ten topics, so the well never runs dry. (They're AI-generated and meant to delight — double-check before you quote one at dinner.)
+It's a tiny web app that uses OpenAI's API to serve incredulous facts, lets you react to each one, and has a lightweight **pseudo-monetization** flow built in. Facts are generated on demand across ten topics, so the well never runs dry. (They're AI-generated and meant to delight — double-check before you quote one at dinner.)
+
+## Pricing
+
+A deliberately simple, escalating paywall:
+
+| Tier | Unlocks | Price |
+| --- | --- | --- |
+| **Free** | The first 5 facts | $0, no signup |
+| **Email** | 50 facts | Your email address |
+| **Paid** | Unlimited facts, forever | $1.99 |
+
+## Screenshots
+
+| Out of free facts | Free version unlocked |
+| --- | --- |
+| <img src="docs/screenshot-upgrade.png" alt="Upgrade modal" width="420" /> | <img src="docs/screenshot-unlocked.png" alt="Unlocked modal" width="420" /> |
 
 ## Quick Start
 
@@ -38,8 +55,8 @@ Open [localhost:3000](http://localhost:3000) and start reacting. You only need a
 - **Emoji reactions** — ❤️ 😂 😢 🔥 to load the next fact and log how it landed.
 - **Ten topics** — Animals, Art, Food, History, Literature, Music, Nature, Science, Space, Sports.
 - **On-demand generation** — facts come from OpenAI (`gpt-4o-mini`) as structured JSON.
+- **Built-in paywall** — free → email-gated → paid, with signups captured in Airtable.
 - **Light & dark mode** — system-aware, with a toggle in Preferences.
-- **Soft paywall** — a free tier with an email-gated unlock, wired to Airtable.
 - **Optional analytics** — Mixpanel events when a token is configured.
 
 ## Tech Stack
@@ -97,6 +114,19 @@ A Husky `pre-commit` hook runs `lint-staged` + `tsc --noEmit` on every commit. E
 npx playwright install chromium   # one-time
 yarn test:e2e
 ```
+
+## Traction
+
+A small paid-acquisition experiment on Google Ads:
+
+| Metric | Value |
+| --- | --- |
+| Ad spend | $70 |
+| Cost per click (CPC) | $0.06 |
+| Cost per activation _(clicked "Buy — $1.99")_ | $4.60 |
+| Cost per conversion _(submitted email)_ | $7.00 |
+
+At its peak the site drew **~150 new unique visitors/day** — of whom **~33% interacted** with the app, and **40%+ of those were highly engaged** (4+ facts viewed per visitor).
 
 ## Credits
 
